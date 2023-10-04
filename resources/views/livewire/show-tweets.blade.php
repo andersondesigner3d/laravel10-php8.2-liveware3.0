@@ -43,7 +43,7 @@
     <h2>Lista de arquivos:</h2>
     @foreach($arquivos as $item)
     <div>
-        <img style="width:20%;float:left;margin:10px;max-height:150px;border-radius:10px" src="{{ asset('storage/uploads/'.str_replace('public/uploads/','',$item)) }}" alt="Minha Imagem">
+        <img style="width:10%;float:left;margin:10px;height:150px;border-radius:10px" src="{{ asset('storage/uploads/'.str_replace('public/uploads/','',$item)) }}" alt="Minha Imagem">
     </div>
     @endforeach
 </div>
