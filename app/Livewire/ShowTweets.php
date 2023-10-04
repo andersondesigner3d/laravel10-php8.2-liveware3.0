@@ -3,6 +3,7 @@
 namespace App\Livewire;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 use App\Models\Tweet;
 use Livewire\Component;
@@ -14,18 +15,14 @@ class ShowTweets extends Component
     use WithFileUploads;
     public $file;
     public $idFileInput = 1;
-
-    public function muda(){
-        $this->file = null;
-        $this->file = "";
-    }
-
+    
     public function render()
     {
         $tweets = Tweet::with('user')->get();
         //$tweets = Tweet::with(['user', 'user.endereco'])->get();
-        
-        return view('livewire.show-tweets',compact('tweets'));
+        $arquivos = Storage::files('public/uploads');
+
+        return view('livewire.show-tweets',compact('tweets','arquivos'));
     }
 
     public function novoTweet(){
@@ -70,22 +67,34 @@ class ShowTweets extends Component
 
     public function store()
     {
-        $this->validate([
-            'file' => 'required|file|max:1024',
-        ]);
+       try {
+            $this->validate([
+                'file' => 'required|image|file|max:1024',
+            ]);
 
-        $path = $this->file->store('public/uploads');
+            $path = $this->file->store('public/uploads');
 
-        // Limpe o campo de upload após o sucesso.
-        $this->idFileInput = md5(time());
-        
 
+            // Limpe o campo de upload após o sucesso.
+            $this->idFileInput = md5(time());
+
+
+            $this->resposta = [
+                'resposta' => 'success',
+                'mensagem' => 'Arquivo enviado com sucesso! Destino: '.$path
+            ];
+       } catch (ValidationException $e) {
+            $this->resposta = [
+                'resposta' => 'error',
+                'mensagem' => 'Não foi possível validar o arquivo! => '.$e->getMessage()
+            ];
+            $this->idFileInput = md5(time());
+       } catch (\Throwable $th) {
         $this->resposta = [
-            'resposta' => 'success',
-            'mensagem' => 'Arquivo enviado com sucesso! Destino: '.$path
+            'resposta' => 'error',
+            'mensagem' => 'Não foi possível validar o arquivo!'
         ];
-        
-
-        // return redirect()->to('/'); 
+        $this->idFileInput = md5(time());
+       }
     }
 }
