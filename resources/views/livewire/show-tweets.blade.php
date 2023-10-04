@@ -8,10 +8,10 @@
     padding: 10px;
     margin-bottom:10px;
     ">
-        @if($resposta=='success')
-        Tweet cadastrado com sucesso!
+        @if($resposta['resposta']=='success')
+        {{$resposta['mensagem']}}
         @elseif($resposta=='error')
-        Não foi possível cadastrar Tweet, tente novamente.
+        {{$resposta['mensagem']}}
         @endif
     </div>
     @endif
@@ -24,7 +24,7 @@
     @if(count($tweets)>0)
     <ul>        
         @foreach($tweets as $dados)
-        <li>{{$dados->user->name}} - {{$dados->content}}</li>
+        <li>{{$dados->user->name}} - {{$dados->content}} <button wire:click='excluirTweet("{{$dados->id}}")'>Excluir</button></li>
         @endforeach
     </ul>    
     @else 
