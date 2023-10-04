@@ -18,13 +18,13 @@
     @endif
     <h2>Novo tweet:</h2>
     <form method="post" wire:submit='novoTweet'>
-        <input wire:model.live="message" type="text" name="message" id="message" >
+        <input wire:model.live="message" type="text" name="message" id="message" required>
         <button type="submit">Salvar</button>
     </form>
     <hr>
     <h2>Upload de imagens:</h2>
     <form wire:submit.prevent="store" enctype="multipart/form-data">
-        <input type="file" wire:model="file" id="{{ $idFileInput }}">
+        <input type="file" wire:model="file" id="{{ $idFileInput }}" required>
         <button type="submit" class="btn btn-primary" wire:loading.attr="disabled" wire:target="store">Enviar</button>
     </form>
     <div wire:loading wire:target="store">Uploading...</div>
