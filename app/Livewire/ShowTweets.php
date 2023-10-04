@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Livewire;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 use App\Models\Tweet;
 use Livewire\Component;
@@ -9,9 +11,13 @@ class ShowTweets extends Component
 {
     public $message = "";
     public $resposta = '';
+    use WithFileUploads;
+    public $file;
+    public $idFileInput = 1;
 
     public function muda(){
-        $this->message = "mudou o texto";
+        $this->file = null;
+        $this->file = "";
     }
 
     public function render()
@@ -60,5 +66,26 @@ class ShowTweets extends Component
                 'mensagem' => 'Não foi possível excluir o Tweet!'
             ];
         }
+    }
+
+    public function store()
+    {
+        $this->validate([
+            'file' => 'required|file|max:1024',
+        ]);
+
+        $path = $this->file->store('public/uploads');
+
+        // Limpe o campo de upload após o sucesso.
+        $this->idFileInput = md5(time());
+        
+
+        $this->resposta = [
+            'resposta' => 'success',
+            'mensagem' => 'Arquivo enviado com sucesso! Destino: '.$path
+        ];
+        
+
+        // return redirect()->to('/'); 
     }
 }

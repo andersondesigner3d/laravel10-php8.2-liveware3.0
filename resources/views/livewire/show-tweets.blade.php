@@ -18,7 +18,14 @@
     <form method="post" wire:submit='novoTweet'>
         <input wire:model.live="message" type="text" name="message" id="message" >
         <button type="submit">Salvar</button>
-    </form>    
+    </form>
+    <hr>
+    <h2>Upload de arquivo:</h2>
+    <form wire:submit.prevent="store" enctype="multipart/form-data">
+        <input type="file" wire:model="file" id="{{ $idFileInput }}">
+        <button type="submit" class="btn btn-primary" wire:loading.attr="disabled" wire:target="store">Enviar</button>
+    </form>
+    <div wire:loading wire:target="store">Uploading...</div>
     <hr>
     <h2>Lista de Tweets:</h2>
     @if(count($tweets)>0)
