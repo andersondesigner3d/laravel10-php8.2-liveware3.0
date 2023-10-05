@@ -1,11 +1,6 @@
 <?php
 
 namespace App\Livewire;
-use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\LivewireMail;
 
 use App\Models\Tweet;
 use Livewire\Component;
@@ -13,21 +8,14 @@ use Livewire\Component;
 class ShowTweets extends Component
 {
     public $message = "";
-    public $resposta = '';
-    use WithFileUploads;
-    public $file;
-    public $idFileInput = 1;
-    //-------------
-    public $emailDeDestino;
-    public $assuntoEmail;
-    public $mensagemEmail;    
+    public $resposta = '';   
     
     public function render()
     {
         $tweets = Tweet::with('user')->get();
         //$tweets = Tweet::with(['user', 'user.endereco'])->get();
-        $arquivos = Storage::files('public/uploads');
-        return view('livewire.show-tweets',compact('tweets','arquivos'));
+        
+        return view('livewire.show-tweets',compact('tweets'));
     }
 
     public function novoTweet(){
@@ -49,10 +37,8 @@ class ShowTweets extends Component
             $this->resposta = [
                 'resposta' => 'success',
                 'mensagem' => 'Não foi possível cadastrar o Tweet!'
-            ];
-            
-        }
-        
+            ];            
+        }        
     }
 
     public function excluirTweet($idTweet){
@@ -69,59 +55,5 @@ class ShowTweets extends Component
             ];
         }
     }
-
-    public function store()
-    {
-       try {
-            $this->validate([
-                'file' => 'required|image|file|max:1024',
-            ]);
-
-            $path = $this->file->store('public/uploads');
-
-
-            // Limpe o campo de upload após o sucesso.
-            $this->idFileInput = md5(time());
-
-
-            $this->resposta = [
-                'resposta' => 'success',
-                'mensagem' => 'Arquivo enviado com sucesso! Destino: '.$path
-            ];
-       } catch (ValidationException $e) {
-            $this->resposta = [
-                'resposta' => 'error',
-                'mensagem' => 'Não foi possível validar o arquivo! => '.$e->getMessage()
-            ];
-            $this->idFileInput = md5(time());
-       } catch (\Throwable $th) {
-        $this->resposta = [
-            'resposta' => 'error',
-            'mensagem' => 'Não foi possível validar o arquivo!'
-        ];
-        $this->idFileInput = md5(time());
-       }
-    }
-
-    public function enviaEmail(){
-        try {
-            $content = [
-                'subject' => $this->assuntoEmail,
-                'body' => $this->mensagemEmail,
-            ];
-            Mail::to($this->emailDeDestino)->send(new LivewireMail($content));
-            $this->resposta = [
-                'resposta' => 'success',
-                'mensagem' => 'Email enviado com sucesso!'
-            ];
-            $this->emailDeDestino = "";
-            $this->assuntoEmail = "";
-            $this->mensagemEmail = "";
-        } catch (\Throwable $th) {
-            $this->resposta = [
-                'resposta' => 'error',
-                'mensagem' => 'Não foi possível enviar o email! => '.$th->getMessage()
-            ];
-        }
-    }
+    
 }

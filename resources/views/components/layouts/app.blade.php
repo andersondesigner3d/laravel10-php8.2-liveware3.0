@@ -8,6 +8,13 @@
     @livewireStyles
 </head>
 <body>
+    <ul>
+        <li><a href="/" wire:navigate>Index</a></li>
+        <li><a href="tweets" wire:navigate>Novo Tweet</a></li>
+        <li><a href="enviar-arquivos" wire:navigate>Enviar Arquivos</a></li>
+        <li><a href="enviar-email" wire:navigate>Enviar Email</a></li>
+    </ul>
+    <hr>
     {{ $slot }}
     @livewireScripts
 </body>
