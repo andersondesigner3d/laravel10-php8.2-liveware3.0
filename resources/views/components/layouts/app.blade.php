@@ -40,7 +40,7 @@
         {{ $slot }}
     </div>
 
-    <hr>
+    <hr style="clear: both;">
     
     @livewireScripts
 </body>

@@ -1,11 +1,6 @@
 <div>
     @if(isset($resposta) && $resposta!='')
-    <div style="
-    background-color: lightgray;
-    border-radius:5px;
-    padding: 10px;
-    margin-bottom:10px;
-    ">
+    <div class="alert alert-secondary">
         @if($resposta['resposta']=='success')
         {{$resposta['mensagem']}}
         @elseif($resposta['resposta']=='error')
@@ -23,7 +18,7 @@
     <h2>Lista de arquivos:</h2>
     @foreach($arquivos as $item)
     <div>
-        <img style="width:10%;float:left;margin:10px;height:150px;border-radius:10px" src="{{ asset('storage/uploads/'.str_replace('public/uploads/','',$item)) }}" alt="Minha Imagem">
+        <img style="width:150px;height:150px;float:left;margin:10px;border-radius:10px" src="{{ asset('storage/uploads/'.str_replace('public/uploads/','',$item)) }}" alt="Minha Imagem">
     </div>
     @endforeach
 </div>
